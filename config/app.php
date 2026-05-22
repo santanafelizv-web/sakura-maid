@@ -9,7 +9,7 @@ $defaultHost = !empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhos
 define('APP_URL', getenv('APP_URL') ?: $defaultScheme.'://'.$defaultHost);
 
 // N8N webhook URL (configura en Railway)
-define('N8N_WEBHOOK', getenv('N8N_WEBHOOK_URL') ?: '');
+define('N8N_WEBHOOK', getenv('N8N_WEBHOOK') ?: '');
 
 if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params(['lifetime'=>86400,'path'=>'/','httponly'=>true,'samesite'=>'Lax']);
@@ -34,11 +34,13 @@ function triggerN8n(string $evento, array $data): void {
     $url = N8N_WEBHOOK;
     if (empty($url)) return;
     $payload = json_encode(['evento' => $evento, 'data' => $data]);
-    $ctx = stream_context_create(['http'=>[
-        'method'  => 'POST',
-        'header'  => "Content-Type: application/json\r\nContent-Length: ".strlen($payload)."\r\n",
-        'content' => $payload,
-        'timeout' => 5,
-    ]]);
-    @file_get_contents($url, false, $ctx);
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_exec($ch);
+    curl_close($ch);
 }
