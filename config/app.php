@@ -1,6 +1,12 @@
 <?php
 define('APP_NAME', 'Sakura Maid Services');
-define('APP_URL',  getenv('APP_URL') ?: 'http://localhost:8000');
+
+$defaultScheme = 'http';
+if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+    $defaultScheme = 'https';
+}
+$defaultHost = !empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost:8000';
+define('APP_URL', getenv('APP_URL') ?: $defaultScheme.'://'.$defaultHost);
 
 // N8N webhook URL (configura en Railway)
 define('N8N_WEBHOOK', getenv('N8N_WEBHOOK_URL') ?: '');
