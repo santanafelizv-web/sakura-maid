@@ -8,7 +8,10 @@ spl_autoload_register(function(string $class) {
     }
 });
 
-$uri    = strtok($_SERVER['REQUEST_URI'], '?');
+$uri = strtok($_SERVER['REQUEST_URI'], '?');
+$uri = preg_replace('#/+#', '/', $uri);
+$uri = rtrim($uri, '/');
+if ($uri === '') { $uri = '/'; }
 $method = $_SERVER['REQUEST_METHOD'];
 
 $routes = [
