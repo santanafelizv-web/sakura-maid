@@ -1,12 +1,15 @@
 <?php
-// app/controllers/MaidController.php
 class MaidController {
     public function index(): void {
         requireLogin(); requireRole('cliente');
         $db=getDB(); $q=trim($_GET['q']??'');
         $sql="SELECT pm.*,u.nombre,u.apellido FROM perfil_maid pm JOIN usuario u ON pm.usuario_id=u.id WHERE pm.activo=1 AND pm.disponibilidad='disponible'";
         $params=[];
-        if ($q) { $sql.=" AND (u.nombre LIKE ? OR u.apellido LIKE ? OR pm.descripcion LIKE ?)"; $like="%$q%"; $params=[$like,$like,$like]; }
+        if ($q) { 
+            $sql.=" AND (u.nombre LIKE ? OR u.apellido LIKE ?)"; 
+            $like="$q%"; 
+            $params=[$like,$like]; 
+        }
         $sql.=" ORDER BY pm.calificacion_promedio DESC";
         $s=$db->prepare($sql); $s->execute($params); $maids=$s->fetchAll();
         require __DIR__.'/../views/client/maids.php';
