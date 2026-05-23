@@ -9,7 +9,7 @@ $defaultHost = !empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhos
 define('APP_URL', getenv('APP_URL') ?: $defaultScheme.'://'.$defaultHost);
 
 // N8N webhook URL (configura en Railway)
-define('N8N_WEBHOOK', getenv('N8N_WEBHOOK') ?: '');
+define('N8N_WEBHOOK', getenv('N8N_WEBHOOK') ?: '');git add .
 
 if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params(['lifetime'=>86400,'path'=>'/','httponly'=>true,'samesite'=>'Lax']);
