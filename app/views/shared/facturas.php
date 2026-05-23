@@ -34,19 +34,19 @@
     
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem">
       <div style="background:var(--g100);padding:1rem;border-radius:var(--r)">
-        <div style="font-size:.75rem;color:var(--g400);margin-bottom:.3rem">👤 <?=$u['rol']==='cliente'?'Maid':'Cliente'?></div>
+        <div style="font-size:.75rem;color:var(--g400);margin-bottom:.3rem"><?=$u['rol']==='cliente'?'Maid':'Cliente'?></div>
         <div style="font-weight:600"><?=$u['rol']==='cliente'?e($f['mn'].' '.$f['ma']):e($f['cn'].' '.$f['ca'])?></div>
       </div>
       <div style="background:var(--g100);padding:1rem;border-radius:var(--r)">
-        <div style="font-size:.75rem;color:var(--g400);margin-bottom:.3rem">📅 Fecha del servicio</div>
+        <div style="font-size:.75rem;color:var(--g400);margin-bottom:.3rem">Fecha del servicio</div>
         <div style="font-weight:600"><?=e($f['fecha'])?></div>
       </div>
       <div style="background:var(--g100);padding:1rem;border-radius:var(--r)">
-        <div style="font-size:.75rem;color:var(--g400);margin-bottom:.3rem">📋 N° Factura</div>
+        <div style="font-size:.75rem;color:var(--g400);margin-bottom:.3rem">N° Factura</div>
         <div style="font-weight:600"><?=e($f['numero'])?></div>
       </div>
       <div style="background:var(--g100);padding:1rem;border-radius:var(--r)">
-        <div style="font-size:.75rem;color:var(--g400);margin-bottom:.3rem">💳 Estado de pago</div>
+        <div style="font-size:.75rem;color:var(--g400);margin-bottom:.3rem">Estado de pago</div>
         <div style="font-weight:600"><?=e($f['estado_pago'])?></div>
       </div>
     </div>
@@ -66,9 +66,21 @@
       </div>
     </div>
 
+    <!-- Datos ocultos para PDF -->
+    <div id="pdf-data-<?=(int)$f['id']?>" style="display:none"
+      data-numero="<?=e($f['numero'])?>"
+      data-fecha="<?=e($f['fecha'])?>"
+      data-persona="<?=$u['rol']==='cliente'?e($f['mn'].' '.$f['ma']):e($f['cn'].' '.$f['ca'])?>"
+      data-rol="<?=$u['rol']==='cliente'?'Maid':'Cliente'?>"
+      data-estado="<?=e($f['estado_pago'])?>"
+      data-subtotal="RD$<?=number_format((float)$f['subtotal'],2,'.','.')?>"
+      data-itbis="RD$<?=number_format((float)$f['impuesto'],2,'.','.')?>"
+      data-total="RD$<?=number_format((float)$f['total'],2,'.','.')?>">
+    </div>
+
     <div style="text-align:center;margin-top:1rem;display:flex;gap:1rem;justify-content:center">
-      <button onclick="event.stopPropagation();imprimirFactura(<?=(int)$f['id']?>)" class="btn btn-outline btn-sm">🖨️ Imprimir</button>
-      <button onclick="event.stopPropagation();descargarPDF(<?=(int)$f['id']?>, '<?=e($f['numero'])?>')" class="btn btn-primary btn-sm">📄 Descargar PDF</button>
+      <button onclick="event.stopPropagation();imprimirFactura(<?=(int)$f['id']?>)" class="btn btn-outline btn-sm">Imprimir</button>
+      <button onclick="event.stopPropagation();descargarPDF(<?=(int)$f['id']?>)" class="btn btn-primary btn-sm">Descargar PDF</button>
     </div>
 
   </div>
@@ -80,7 +92,6 @@
 @media print {
   .sidebar, nav, .page-head, .actions-bar, button, .btn { display: none !important; }
   .card { box-shadow: none !important; border: 1px solid #ddd; }
-  #print-area { display: block !important; }
 }
 </style>
 
@@ -94,72 +105,80 @@ function toggleFactura(id) {
 }
 
 function imprimirFactura(id) {
-  const det = document.getElementById('detalle-'+id);
-  det.style.display='block';
+  document.getElementById('detalle-'+id).style.display='block';
   window.print();
 }
 
-function descargarPDF(id, numero) {
+function descargarPDF(id) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-  const det = document.getElementById('detalle-'+id);
-  det.style.display='block';
+  const d = document.getElementById('pdf-data-'+id).dataset;
 
   // Encabezado
   doc.setFillColor(201, 123, 132);
-  doc.rect(0, 0, 210, 35, 'F');
+  doc.rect(0, 0, 210, 38, 'F');
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(22);
+  doc.setFontSize(20);
   doc.setFont('helvetica', 'bold');
-  doc.text('🌸 Sakura Maid Services', 15, 18);
+  doc.text('Sakura Maid Services', 15, 18);
   doc.setFontSize(11);
   doc.setFont('helvetica', 'normal');
-  doc.text('Factura: ' + numero, 15, 28);
+  doc.text('Factura: ' + d.numero, 15, 30);
 
-  // Datos de la factura
+  // Datos
   doc.setTextColor(50, 50, 50);
   doc.setFontSize(11);
-  let y = 50;
+  let y = 55;
 
-  const cards = det.querySelectorAll('[style*="background:var(--g100)"]');
-  cards.forEach(card => {
-    const label = card.querySelector('[style*="font-size:.75rem"]');
-    const value = card.querySelector('[style*="font-weight:600"]');
-    if(label && value) {
-      doc.setFont('helvetica', 'bold');
-      doc.text(label.innerText + ':', 15, y);
-      doc.setFont('helvetica', 'normal');
-      doc.text(value.innerText, 80, y);
-      y += 10;
-    }
+  const rows = [
+    [d.rol, d.persona],
+    ['Fecha del servicio', d.fecha],
+    ['N° Factura', d.numero],
+    ['Estado de pago', d.estado],
+  ];
+
+  rows.forEach(([label, value]) => {
+    doc.setFont('helvetica', 'bold');
+    doc.text(label + ':', 15, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(value, 80, y);
+    y += 12;
   });
 
-  // Línea separadora
+  // Separador
   y += 5;
   doc.setDrawColor(201, 123, 132);
   doc.setLineWidth(0.5);
   doc.line(15, y, 195, y);
-  y += 10;
+  y += 12;
 
   // Resumen financiero
   doc.setFontSize(12);
-  const resumen = det.querySelectorAll('[style*="display:flex;justify-content:space-between"]');
-  resumen.forEach(row => {
-    const cols = row.querySelectorAll('span');
-    if(cols.length >= 2) {
-      doc.setFont('helvetica', 'normal');
-      doc.text(cols[0].innerText, 80, y);
-      doc.text(cols[1].innerText, 150, y, {align: 'right'});
-      y += 10;
-    }
+  const montos = [
+    ['Subtotal', d.subtotal],
+    ['ITBIS (18%)', d.itbis],
+  ];
+  montos.forEach(([label, val]) => {
+    doc.setFont('helvetica', 'normal');
+    doc.text(label, 80, y);
+    doc.text(val, 195, y, {align: 'right'});
+    y += 10;
   });
 
-  // Pie de página
+  // Total
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.setTextColor(201, 123, 132);
+  doc.text('Total', 80, y + 5);
+  doc.text(d.total, 195, y + 5, {align: 'right'});
+
+  // Pie
   doc.setFontSize(9);
   doc.setTextColor(150, 150, 150);
-  doc.text('Sakura Maid Services © ' + new Date().getFullYear() + ' — Santo Domingo, RD', 105, 285, {align: 'center'});
+  doc.setFont('helvetica', 'normal');
+  doc.text('Sakura Maid Services - Santo Domingo, RD', 105, 285, {align: 'center'});
 
-  doc.save(numero + '.pdf');
+  doc.save(d.numero + '.pdf');
 }
 </script>
 <?php endif; ?>
