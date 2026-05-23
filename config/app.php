@@ -9,7 +9,7 @@ $defaultHost = !empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhos
 define('APP_URL', getenv('APP_URL') ?: $defaultScheme.'://'.$defaultHost);
 
 // N8N webhook URL (configura en Railway)
-define('N8N_WEBHOOK', getenv('N8N_WEBHOOK') ?: '');git add .
+define('N8N_WEBHOOK', getenv('N8N_WEBHOOK_URL') ?: '');
 
 if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params(['lifetime'=>86400,'path'=>'/','httponly'=>true,'samesite'=>'Lax']);
@@ -43,4 +43,5 @@ function triggerN8n(string $evento, array $data): void {
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_exec($ch);
     curl_close($ch);
+}
 }
