@@ -66,8 +66,9 @@
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:1rem">
-      <button onclick="event.stopPropagation();imprimirFactura(<?=(int)$f['id']?>)" class="btn btn-outline btn-sm">🖨️ Imprimir factura</button>
+    <div style="text-align:center;margin-top:1rem;display:flex;gap:1rem;justify-content:center">
+      <button onclick="event.stopPropagation();imprimirFactura(<?=(int)$f['id']?>)" class="btn btn-outline btn-sm">🖨️ Imprimir</button>
+      <button onclick="event.stopPropagation();descargarPDF(<?=(int)$f['id']?>, '<?=e($f['numero'])?>')" class="btn btn-primary btn-sm">📄 Descargar PDF</button>
     </div>
 
   </div>
@@ -75,6 +76,15 @@
 <?php endforeach; ?>
 </div>
 
+<style>
+@media print {
+  .sidebar, nav, .page-head, .actions-bar, button, .btn { display: none !important; }
+  .card { box-shadow: none !important; border: 1px solid #ddd; }
+  #print-area { display: block !important; }
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 function toggleFactura(id) {
   const det = document.getElementById('detalle-'+id);
@@ -82,10 +92,74 @@ function toggleFactura(id) {
   if(det.style.display==='none'){det.style.display='block';arr.textContent='▲';}
   else{det.style.display='none';arr.textContent='▼';}
 }
+
 function imprimirFactura(id) {
   const det = document.getElementById('detalle-'+id);
   det.style.display='block';
   window.print();
+}
+
+function descargarPDF(id, numero) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const det = document.getElementById('detalle-'+id);
+  det.style.display='block';
+
+  // Encabezado
+  doc.setFillColor(201, 123, 132);
+  doc.rect(0, 0, 210, 35, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(22);
+  doc.setFont('helvetica', 'bold');
+  doc.text('🌸 Sakura Maid Services', 15, 18);
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Factura: ' + numero, 15, 28);
+
+  // Datos de la factura
+  doc.setTextColor(50, 50, 50);
+  doc.setFontSize(11);
+  let y = 50;
+
+  const cards = det.querySelectorAll('[style*="background:var(--g100)"]');
+  cards.forEach(card => {
+    const label = card.querySelector('[style*="font-size:.75rem"]');
+    const value = card.querySelector('[style*="font-weight:600"]');
+    if(label && value) {
+      doc.setFont('helvetica', 'bold');
+      doc.text(label.innerText + ':', 15, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(value.innerText, 80, y);
+      y += 10;
+    }
+  });
+
+  // Línea separadora
+  y += 5;
+  doc.setDrawColor(201, 123, 132);
+  doc.setLineWidth(0.5);
+  doc.line(15, y, 195, y);
+  y += 10;
+
+  // Resumen financiero
+  doc.setFontSize(12);
+  const resumen = det.querySelectorAll('[style*="display:flex;justify-content:space-between"]');
+  resumen.forEach(row => {
+    const cols = row.querySelectorAll('span');
+    if(cols.length >= 2) {
+      doc.setFont('helvetica', 'normal');
+      doc.text(cols[0].innerText, 80, y);
+      doc.text(cols[1].innerText, 150, y, {align: 'right'});
+      y += 10;
+    }
+  });
+
+  // Pie de página
+  doc.setFontSize(9);
+  doc.setTextColor(150, 150, 150);
+  doc.text('Sakura Maid Services © ' + new Date().getFullYear() + ' — Santo Domingo, RD', 105, 285, {align: 'center'});
+
+  doc.save(numero + '.pdf');
 }
 </script>
 <?php endif; ?>
