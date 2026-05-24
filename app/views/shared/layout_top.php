@@ -6,7 +6,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
 </head>
 <body>
-<?php $u=authUser(); ?>
+<?php $u=authUser(); $seed=urlencode($u['nombre'].$u['apellido']); $avatarUrl="https://api.dicebear.com/7.x/lorelei/svg?seed={$seed}&backgroundColor=C97B84&radius=50"; ?>
 <nav class="navbar">
   <div class="nav-inner">
     <a href="/dashboard" class="nav-brand">🌸 <span>Sakura</span> Maid Services</a>
@@ -34,7 +34,7 @@
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sidebar-user">
-    <div class="s-avatar"><?=strtoupper(mb_substr($u['nombre'],0,1))?></div>
+    <img src="<?=$avatarUrl?>" alt="<?=e($u['nombre'])?>" style="width:44px;height:44px;border-radius:50%;flex-shrink:0;background:#f0ece8">
     <div><div class="s-name"><?=e($u['nombre'].' '.$u['apellido'])?></div><div class="s-rol"><?=e($u['rol'])?></div></div>
   </div>
   <a href="/dashboard" class="<?=($ap??'')==='dash'?'active':''?>"><span class="s-icon">🏠</span>Dashboard</a>
