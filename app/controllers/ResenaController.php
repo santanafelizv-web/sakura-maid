@@ -1,12 +1,14 @@
 <?php
 class ResenaController {
-    public function index(): void {
-        requireLogin(); requireRole('cliente');
-        $user = authUser(); $db = getDB();
-        $r = $db->prepare("SELECT r.*,s.fecha,u.nombre mn,u.apellido ma FROM resena r JOIN servicio s ON r.servicio_id=s.id JOIN perfil_maid pm ON s.maid_id=pm.id JOIN usuario u ON pm.usuario_id=u.id WHERE r.autor_id=? ORDER BY r.created_at DESC");
-        $r->execute([$user['id']]); $resenas = $r->fetchAll();
-        require __DIR__.'/../views/client/resenas.php';
-    }
+   public function index(): void {
+    requireLogin(); requireRole('cliente');
+    $user = authUser(); $db = getDB();
+    $r = $db->prepare("SELECT r.*,s.fecha,u.nombre mn,u.apellido ma FROM resena r JOIN servicio s ON r.servicio_id=s.id JOIN perfil_maid pm ON s.maid_id=pm.id JOIN usuario u ON pm.usuario_id=u.id WHERE r.autor_id=? ORDER BY r.created_at DESC");
+    $r->execute([$user['id']]); $resenas = $r->fetchAll();
+    $p = $db->prepare("SELECT s.*,u.nombre mn,u.apellido ma FROM servicio s JOIN perfil_maid pm ON s.maid_id=pm.id JOIN usuario u ON pm.usuario_id=u.id WHERE s.cliente_id=? AND s.estado='completado' AND s.id NOT IN (SELECT servicio_id FROM resena) ORDER BY s.fecha DESC");
+    $p->execute([$user['id']]); $pendientes = $p->fetchAll();
+    require __DIR__.'/../views/client/resenas.php';
+}
 
     public function crear(): void {
         requireLogin(); requireRole('cliente');
