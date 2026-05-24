@@ -7,7 +7,7 @@ class ResenaController {
     $r->execute([$user['id']]); $resenas = $r->fetchAll();
     $p = $db->prepare("SELECT s.*,u.nombre mn,u.apellido ma FROM servicio s JOIN perfil_maid pm ON s.maid_id=pm.id JOIN usuario u ON pm.usuario_id=u.id WHERE s.cliente_id=? AND s.estado='completado' AND s.id NOT IN (SELECT servicio_id FROM resena) ORDER BY s.fecha DESC");
     $p->execute([$user['id']]); $pendientes = $p->fetchAll();
-    require __DIR__.'/../../../views/client/resenas.php';
+    require __DIR__.'/../views/client/resenas.php';
 }
 
     public function crear(): void {
@@ -21,7 +21,7 @@ class ResenaController {
         $ya->execute([$sid]);
         if ($ya->fetch()) { $_SESSION['err']='Ya dejaste una reseña para este servicio.'; redirect('/resenas'); }
         $err = $_SESSION['err'] ?? null; unset($_SESSION['err']);
-        require __DIR__.'/../../../views/client/resena.php';
+        require __DIR__.'/../views/client/resena.php';
     }
 
     public function guardar(): void {
