@@ -13,7 +13,6 @@
 </div>
 <?php endif; ?>
 
-<!-- PRÓXIMO SERVICIO -->
 <?php if(!empty($proximo_servicio)): ?>
 <div class="card" style="background:linear-gradient(135deg,#fce8ea,#fff);border-left:4px solid var(--rose);margin-bottom:1.2rem">
   <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
@@ -30,7 +29,6 @@
 </div>
 <?php endif; ?>
 
-<!-- STATS -->
 <div class="stats-row">
   <div class="card">
     <div class="card-title">Servicios totales</div>
@@ -51,46 +49,26 @@
   </div>
 </div>
 
-<!-- MAID FAVORITA Y ACCIONES -->
-<div class="charts-row" style="margin-bottom:1.2rem">
-
-  <?php if(!empty($maid_favorita)): 
-    $ini = strtoupper(substr($maid_favorita['mn'],0,1).substr($maid_favorita['ma'],0,1));
-    $estrellas = round($maid_favorita['calificacion_promedio']??0);
-  ?>
-  <div class="card" style="display:flex;align-items:center;gap:1.2rem">
-    <div style="width:56px;height:56px;border-radius:50%;background:var(--rose);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.2rem;flex-shrink:0"><?=$ini?></div>
-    <div style="flex:1">
-      <div style="font-size:.75rem;color:var(--g400);margin-bottom:.2rem">Tu maid favorita</div>
-      <div style="font-weight:700;font-size:1rem"><?=e($maid_favorita['mn'].' '.$maid_favorita['ma'])?></div>
-      <div style="font-size:.82rem;color:var(--g400)"><?=str_repeat('⭐',$estrellas)?> · <?=(int)$maid_favorita['veces']?> servicios contratados</div>
-    </div>
-    <a href="/maids" class="btn btn-primary btn-sm">Contratar de nuevo</a>
+<?php if(!empty($maid_favorita)): 
+  $ini = strtoupper(substr($maid_favorita['mn'],0,1).substr($maid_favorita['ma'],0,1));
+  $estrellas = round($maid_favorita['calificacion_promedio']??0);
+?>
+<div class="card" style="display:flex;align-items:center;gap:1.2rem;margin-bottom:1.2rem">
+  <div style="width:56px;height:56px;border-radius:50%;background:var(--rose);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.2rem;flex-shrink:0"><?=$ini?></div>
+  <div style="flex:1">
+    <div style="font-size:.75rem;color:var(--g400);margin-bottom:.2rem">Tu maid favorita</div>
+    <div style="font-weight:700;font-size:1rem"><?=e($maid_favorita['mn'].' '.$maid_favorita['ma'])?></div>
+    <div style="font-size:.82rem;color:var(--g400)"><?=str_repeat('⭐',$estrellas)?> · <?=(int)$maid_favorita['veces']?> servicios contratados</div>
   </div>
-  <?php else: ?>
-  <div class="card" style="text-align:center;padding:2rem">
-    <div style="font-size:2rem;margin-bottom:.5rem">🧹</div>
-    <p style="color:var(--g400);margin-bottom:1rem">Aún no has contratado ninguna maid</p>
-    <a href="/maids" class="btn btn-primary btn-sm">Buscar Maid</a>
-  </div>
-  <?php endif; ?>
-
-  <div class="card" style="display:flex;flex-direction:column;gap:.8rem">
-    <div style="font-weight:600;font-size:.9rem;margin-bottom:.3rem">Acciones rápidas</div>
-    <a href="/maids" class="btn btn-primary btn-auto">Buscar Maid</a>
-    <a href="/servicios" class="btn btn-outline btn-auto">Ver mis servicios</a>
-    <a href="/facturas" class="btn btn-outline btn-auto">Ver facturas</a>
-  </div>
-
+  <a href="/maids" class="btn btn-primary btn-sm">Contratar de nuevo</a>
 </div>
+<?php endif; ?>
 
-<!-- GRÁFICOS -->
 <div class="charts-row">
   <div class="chart-card"><div class="chart-title">Servicios por mes (<?=date('Y')?>)</div><div class="chart-wrap"><canvas id="cBar"></canvas></div></div>
   <div class="chart-card"><div class="chart-title">Estado de servicios</div><div class="chart-wrap"><canvas id="cDonut"></canvas></div></div>
 </div>
 
-<!-- SERVICIOS RECIENTES -->
 <div class="card" style="margin-top:1.2rem">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
     <h2 style="font-size:1rem">Servicios recientes</h2>
