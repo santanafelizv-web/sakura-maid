@@ -80,6 +80,8 @@
   <div style="display:flex;flex-direction:column;gap:.7rem">
     <?php foreach($recientes as $s): 
       $ini_m = strtoupper(substr($s['mn'],0,1).substr($s['ma'],0,1));
+      $ya_resena = false;
+      // verificar si ya tiene reseña
     ?>
     <div style="display:flex;align-items:center;gap:1rem;padding:.8rem;background:var(--g100);border-radius:var(--r)">
       <div style="width:38px;height:38px;border-radius:50%;background:#C97B84;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.8rem;flex-shrink:0"><?=$ini_m?></div>
@@ -87,7 +89,12 @@
         <div style="font-weight:600;font-size:.88rem"><?=e($s['mn'].' '.$s['ma'])?></div>
         <div style="font-size:.78rem;color:var(--g400)"><?=e($s['fecha'])?> · RD$<?=number_format((float)$s['precio_total'],0,'.','.')?></div>
       </div>
-      <span class="badge b-<?=e($s['estado'])?>"><?=e($s['estado'])?></span>
+      <div style="display:flex;align-items:center;gap:.5rem">
+        <span class="badge b-<?=e($s['estado'])?>"><?=e($s['estado'])?></span>
+        <?php if($s['estado']==='completado'): ?>
+        <a href="/resenas/crear?servicio_id=<?=(int)$s['id']?>" class="btn btn-primary btn-sm" style="font-size:.75rem;padding:.3rem .7rem">⭐ Reseña</a>
+        <?php endif; ?>
+      </div>
     </div>
     <?php endforeach; ?>
   </div>
