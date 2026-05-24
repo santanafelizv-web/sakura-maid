@@ -42,6 +42,7 @@
     <a href="/maids"     class="<?=($ap??'')==='maids'?'active':''?>"><span class="s-icon">🔍</span>Buscar Maids</a>
     <a href="/servicios" class="<?=($ap??'')==='servicios'?'active':''?>"><span class="s-icon">📋</span>Mis Servicios</a>
     <a href="/facturas"  class="<?=($ap??'')==='facturas'?'active':''?>"><span class="s-icon">🧾</span>Facturas</a>
+    <a href="/resenas"   class="<?=($ap??'')==='resenas'?'active':''?>"><span class="s-icon">⭐</span>Mis Reseñas</a>
   <?php elseif($u['rol']==='maid'): ?>
     <a href="/maids/perfil" class="<?=($ap??'')==='mperfil'?'active':''?>"><span class="s-icon">✏️</span>Mi Perfil Maid</a>
     <a href="/servicios"    class="<?=($ap??'')==='servicios'?'active':''?>"><span class="s-icon">📋</span>Mis Trabajos</a>

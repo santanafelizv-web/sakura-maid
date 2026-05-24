@@ -1,47 +1,36 @@
-<?php $pageTitle='Dejar Reseña'; $ap='servicios'; require __DIR__.'/../shared/layout_top.php'; ?>
-<div class="page-head"><h1>Dejar Reseña ⭐</h1><p>Califica tu experiencia</p></div>
+<?php $pageTitle='Mis Reseñas'; $ap='resenas'; require __DIR__.'/../shared/layout_top.php'; ?>
+<div class="page-head"><h1>Mis Reseñas ⭐</h1><p>Reseñas que has dejado</p></div>
 
-<div class="card" style="max-width:500px;margin:0 auto">
-  <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--g200)">
-    <?php $ini = strtoupper(substr($servicio['mn'],0,1).substr($servicio['ma'],0,1)); ?>
-    <div style="width:50px;height:50px;border-radius:50%;background:#C97B84;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem"><?=$ini?></div>
-    <div>
-      <div style="font-weight:700"><?=e($servicio['mn'].' '.$servicio['ma'])?></div>
-      <div style="font-size:.82rem;color:var(--g400)">Servicio del <?=e($servicio['fecha'])?></div>
-    </div>
-  </div>
-
-  <?php if($err): ?><div class="alert alert-error"><?=e($err)?></div><?php endif; ?>
-
-  <form method="POST" action="/resenas/crear">
-    <input type="hidden" name="servicio_id" value="<?=(int)$servicio['id']?>">
-    
-    <div class="form-group">
-      <label style="font-weight:600;margin-bottom:.5rem;display:block">Calificación</label>
-      <div style="display:flex;gap:.5rem;font-size:2rem" id="stars">
+<?php if(empty($resenas)): ?>
+<div class="card" style="text-align:center;padding:3rem">
+  <div style="font-size:3rem;margin-bottom:1rem">⭐</div>
+  <p style="color:var(--g400)">Aún no has dejado reseñas.</p>
+  <a href="/servicios" class="btn btn-primary" style="margin-top:1rem">Ver mis servicios</a>
+</div>
+<?php else: ?>
+<div style="display:flex;flex-direction:column;gap:1rem">
+<?php foreach($resenas as $r):
+  $ini = strtoupper(substr($r['mn'],0,1).substr($r['ma'],0,1));
+  $est = (int)$r['calificacion'];
+?>
+<div class="card">
+  <div style="display:flex;align-items:center;gap:1rem">
+    <div style="width:46px;height:46px;border-radius:50%;background:#C97B84;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1rem;flex-shrink:0"><?=$ini?></div>
+    <div style="flex:1">
+      <div style="font-weight:700"><?=e($r['mn'].' '.$r['ma'])?></div>
+      <div style="font-size:.82rem;color:var(--g400)">Servicio del <?=e($r['fecha'])?></div>
+      <div style="margin:.3rem 0">
         <?php for($i=1;$i<=5;$i++): ?>
-        <span style="cursor:pointer;color:#ddd" data-val="<?=$i?>" onclick="setRating(<?=$i?>)">★</span>
+          <span style="color:<?=$i<=$est?'#f4c542':'#ddd'?>;font-size:1.1rem">★</span>
         <?php endfor; ?>
       </div>
-      <input type="hidden" name="calificacion" id="calificacion" value="0">
+      <?php if($r['comentario']): ?>
+      <div style="font-size:.85rem;color:var(--g500);font-style:italic">"<?=e($r['comentario'])?>"</div>
+      <?php endif; ?>
     </div>
-
-    <div class="form-group" style="margin-top:1rem">
-      <label style="font-weight:600;margin-bottom:.5rem;display:block">Comentario (opcional)</label>
-      <textarea name="comentario" class="form-control" rows="4" placeholder="¿Cómo fue tu experiencia con esta maid?"></textarea>
-    </div>
-
-    <button type="submit" class="btn btn-primary" style="width:100%;margin-top:1rem">Enviar reseña ⭐</button>
-    <a href="/servicios" class="btn btn-outline" style="width:100%;margin-top:.5rem;text-align:center">Cancelar</a>
-  </form>
+  </div>
 </div>
-
-<script>
-function setRating(val) {
-  document.getElementById('calificacion').value = val;
-  document.querySelectorAll('#stars span').forEach((s,i) => {
-    s.style.color = i < val ? '#f4c542' : '#ddd';
-  });
-}
-</script>
+<?php endforeach; ?>
+</div>
+<?php endif; ?>
 <?php require __DIR__.'/../shared/layout_bottom.php'; ?>
