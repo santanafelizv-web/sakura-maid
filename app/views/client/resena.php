@@ -1,62 +1,59 @@
-<?php $pageTitle='Reseñas'; $ap='resenas'; require __DIR__.'/../shared/layout_top.php'; ?>
-<div class="page-head"><h1>Reseñas ⭐</h1><p>Califica tus servicios completados</p></div>
+<?php $pageTitle='Calificar Servicio'; $ap='resenas'; require __DIR__.'/../shared/layout_top.php'; ?>
+<div class="page-head"><h1>Calificar Servicio ⭐</h1><p>Deja tu reseña sobre este servicio</p></div>
 
-<?php if(empty($resenas) && empty($pendientes)): ?>
-<div class="card" style="text-align:center;padding:3rem">
-  <div style="font-size:3rem;margin-bottom:1rem">⭐</div>
-  <p style="color:var(--g400)">No tienes servicios completados aún.</p>
-</div>
-<?php else: ?>
-
-<?php if(!empty($pendientes)): ?>
-<div style="margin-bottom:1.5rem">
-  <h2 style="font-size:1rem;margin-bottom:1rem;color:var(--rose)">Pendientes por calificar</h2>
-  <div style="display:flex;flex-direction:column;gap:.8rem">
-  <?php foreach($pendientes as $s):
-    $ini = strtoupper(substr($s['mn'],0,1).substr($s['ma'],0,1));
-  ?>
-  <div class="card" style="display:flex;align-items:center;gap:1rem">
-    <div style="width:46px;height:46px;border-radius:50%;background:#C97B84;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1rem;flex-shrink:0"><?=$ini?></div>
-    <div style="flex:1">
-      <div style="font-weight:700"><?=e($s['mn'].' '.$s['ma'])?></div>
-      <div style="font-size:.82rem;color:var(--g400)">Servicio del <?=e($s['fecha'])?> · RD$<?=number_format($s['precio_total'],0,'.','.')?></div>
-    </div>
-    <a href="/resenas/crear?servicio_id=<?=(int)$s['id']?>" class="btn btn-primary btn-sm">⭐ Calificar</a>
-  </div>
-  <?php endforeach; ?>
-  </div>
-</div>
+<?php if($err): ?>
+<div class="alert alert-error"><?=e($err)?></div>
 <?php endif; ?>
 
-<?php if(!empty($resenas)): ?>
-<div>
-  <h2 style="font-size:1rem;margin-bottom:1rem">Reseñas dejadas</h2>
-  <div style="display:flex;flex-direction:column;gap:.8rem">
-  <?php foreach($resenas as $r):
-    $ini = strtoupper(substr($r['mn'],0,1).substr($r['ma'],0,1));
-    $est = (int)$r['calificacion'];
-  ?>
-  <div class="card">
-    <div style="display:flex;align-items:center;gap:1rem">
-      <div style="width:46px;height:46px;border-radius:50%;background:#C97B84;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1rem;flex-shrink:0"><?=$ini?></div>
-      <div style="flex:1">
-        <div style="font-weight:700"><?=e($r['mn'].' '.$r['ma'])?></div>
-        <div style="font-size:.82rem;color:var(--g400)">Servicio del <?=e($r['fecha'])?></div>
-        <div style="margin:.3rem 0">
-          <?php for($i=1;$i<=5;$i++): ?>
-            <span style="color:<?=$i<=$est?'#f4c542':'#ddd'?>;font-size:1.1rem">★</span>
-          <?php endfor; ?>
-        </div>
-        <?php if($r['comentario']): ?>
-        <div style="font-size:.85rem;color:var(--g500);font-style:italic">"<?=e($r['comentario'])?>"</div>
-        <?php endif; ?>
+<div class="card" style="max-width:600px;margin:0 auto">
+  <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+    <?php $ini = strtoupper(substr($servicio['mn'],0,1).substr($servicio['ma'],0,1)); ?>
+    <div style="width:56px;height:56px;border-radius:50%;background:#C97B84;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.2rem;flex-shrink:0"><?=$ini?></div>
+    <div>
+      <div style="font-weight:700;font-size:1.1rem"><?=e($servicio['mn'].' '.$servicio['ma'])?></div>
+      <div style="font-size:.85rem;color:var(--g400)">Servicio del <?=e($servicio['fecha'])?> · RD$<?=number_format($servicio['precio_total'],0,'.','.')?></div>
+    </div>
+  </div>
+
+  <form method="POST" action="/resenas/crear">
+    <input type="hidden" name="servicio_id" value="<?=(int)$servicio['id']?>">
+
+    <div style="margin-bottom:1.5rem">
+      <label style="display:block;font-weight:600;margin-bottom:.5rem">Calificación</label>
+      <div style="display:flex;gap:.5rem" id="estrellas">
+        <?php for($i=1;$i<=5;$i++): ?>
+        <span data-val="<?=$i?>" style="font-size:2rem;cursor:pointer;color:#ddd">★</span>
+        <?php endfor; ?>
       </div>
+      <input type="hidden" name="calificacion" id="calificacion" value="0">
     </div>
-  </div>
-  <?php endforeach; ?>
-  </div>
-</div>
-<?php endif; ?>
 
-<?php endif; ?>
+    <div style="margin-bottom:1.5rem">
+      <label style="display:block;font-weight:600;margin-bottom:.5rem">Comentario <span style="color:var(--g400);font-weight:400">(opcional)</span></label>
+      <textarea name="comentario" rows="4" style="width:100%;padding:.75rem;border:1px solid var(--g200);border-radius:8px;font-family:inherit;font-size:.95rem;resize:vertical" placeholder="¿Cómo fue tu experiencia?"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="width:100%">Enviar Reseña</button>
+  </form>
+</div>
+
+<script>
+const estrellas = document.querySelectorAll('#estrellas span');
+const input = document.getElementById('calificacion');
+estrellas.forEach(s => {
+  s.addEventListener('click', () => {
+    const val = +s.dataset.val;
+    input.value = val;
+    estrellas.forEach(e => e.style.color = +e.dataset.val <= val ? '#f4c542' : '#ddd');
+  });
+  s.addEventListener('mouseover', () => {
+    const val = +s.dataset.val;
+    estrellas.forEach(e => e.style.color = +e.dataset.val <= val ? '#f4c542' : '#ddd');
+  });
+  s.addEventListener('mouseout', () => {
+    const val = +input.value;
+    estrellas.forEach(e => e.style.color = +e.dataset.val <= val ? '#f4c542' : '#ddd');
+  });
+});
+</script>
 <?php require __DIR__.'/../shared/layout_bottom.php'; ?>
