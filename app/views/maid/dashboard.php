@@ -36,10 +36,11 @@
 
 <?php if($perfil): 
   $estrellas = round($perfil['calificacion_promedio']??0);
-  $ini = strtoupper(substr($user['nombre'],0,1).substr($user['apellido'],0,1));
+  $seed = urlencode($user['nombre'].$user['apellido']);
+  $avatar = "https://api.dicebear.com/7.x/lorelei/svg?seed={$seed}&backgroundColor=846C5B&radius=50";
 ?>
 <div class="card" style="display:flex;align-items:center;gap:1.2rem;margin-bottom:1.2rem">
-  <div style="width:60px;height:60px;border-radius:50%;background:#846C5B;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.3rem;flex-shrink:0"><?=$ini?></div>
+  <img src="<?=$avatar?>" alt="<?=e($user['nombre'])?>" style="width:60px;height:60px;border-radius:50%;flex-shrink:0;background:#f0ece8">
   <div style="flex:1">
     <div style="font-weight:700;font-size:1rem"><?=e($user['nombre'].' '.$user['apellido'])?></div>
     <div style="font-size:.88rem;color:var(--g400);margin:.2rem 0">
@@ -87,10 +88,11 @@
   <div style="display:flex;flex-direction:column;gap:.8rem">
     <?php foreach($resenas as $r): 
       $est = (int)$r['calificacion'];
-      $ini_c = strtoupper(substr($r['nombre'],0,1).substr($r['apellido'],0,1));
+      $seed_c = urlencode($r['nombre'].$r['apellido']);
+      $avatar_c = "https://api.dicebear.com/7.x/lorelei/svg?seed={$seed_c}&backgroundColor=C97B84&radius=50";
     ?>
     <div style="display:flex;align-items:flex-start;gap:1rem;padding:.8rem;background:var(--g100);border-radius:var(--r)">
-      <div style="width:36px;height:36px;border-radius:50%;background:#C97B84;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.8rem;flex-shrink:0"><?=$ini_c?></div>
+      <img src="<?=$avatar_c?>" alt="<?=e($r['nombre'])?>" style="width:36px;height:36px;border-radius:50%;flex-shrink:0;background:#f0ece8">
       <div style="flex:1">
         <div style="font-weight:600;font-size:.88rem"><?=e($r['nombre'].' '.$r['apellido'])?></div>
         <div style="margin:.2rem 0">
@@ -118,10 +120,11 @@
   <?php else: ?>
   <div style="display:flex;flex-direction:column;gap:.7rem">
     <?php foreach($recientes as $s): 
-      $ini_c = strtoupper(substr($s['cn'],0,1).substr($s['ca'],0,1));
+      $seed_c = urlencode($s['cn'].$s['ca']);
+      $avatar_c = "https://api.dicebear.com/7.x/lorelei/svg?seed={$seed_c}&backgroundColor=846C5B&radius=50";
     ?>
     <div style="display:flex;align-items:center;gap:1rem;padding:.8rem;background:var(--g100);border-radius:var(--r)">
-      <div style="width:38px;height:38px;border-radius:50%;background:#846C5B;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.8rem;flex-shrink:0"><?=$ini_c?></div>
+      <img src="<?=$avatar_c?>" alt="<?=e($s['cn'])?>" style="width:38px;height:38px;border-radius:50%;flex-shrink:0;background:#f0ece8">
       <div style="flex:1">
         <div style="font-weight:600;font-size:.88rem"><?=e($s['cn'].' '.$s['ca'])?></div>
         <div style="font-size:.78rem;color:var(--g400)"><?=e($s['fecha'])?> · <?=e(substr($s['hora_inicio'],0,5))?> – <?=e(substr($s['hora_fin'],0,5))?> · RD$<?=number_format((float)$s['precio_total'],0,'.','.')?></div>

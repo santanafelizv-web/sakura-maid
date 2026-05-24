@@ -1,4 +1,7 @@
-<?php $pageTitle='Mi Perfil Maid'; $ap='mperfil'; require __DIR__.'/../shared/layout_top.php'; ?>
+<?php $pageTitle='Mi Perfil Maid'; $ap='mperfil'; require __DIR__.'/../shared/layout_top.php';
+$seed = urlencode($user['nombre'].$user['apellido']);
+$avatar = "https://api.dicebear.com/7.x/lorelei/svg?seed={$seed}&backgroundColor=C97B84&radius=50";
+?>
 <div class="page-head"><h1>Mi Perfil de Maid 🧹</h1><p>Así te ven los clientes</p></div>
 <?php if($ok??null): ?><div class="alert alert-success">✓ <?=e($ok)?></div><?php endif; ?>
 <?php if($err??null): ?><div class="alert alert-error">⚠️ <?=e($err)?></div><?php endif; ?>
@@ -19,7 +22,7 @@
 <div>
 <p style="font-size:.82rem;color:var(--g600);margin-bottom:.8rem">Vista previa de tu tarjeta:</p>
 <div class="maid-card">
-  <div class="m-avatar"><?=strtoupper(mb_substr($user['nombre'],0,1))?></div>
+  <img src="<?=$avatar?>" alt="<?=e($user['nombre'])?>" style="width:72px;height:72px;border-radius:50%;margin:0 auto .8rem;display:block;background:#f0ece8">
   <div class="m-name"><?=e($user['nombre'].' '.$user['apellido'])?></div>
   <div class="m-stars"><?php $c=round($perfil['calificacion_promedio']??0);for($i=1;$i<=5;$i++) echo $i<=$c?'★':'☆';?> (<?=number_format((float)($perfil['calificacion_promedio']??0),1)?>)</div>
   <div class="m-rate">RD$<?=number_format((float)($perfil['tarifa_hora']??0),0,'.','.')?>/hr</div>

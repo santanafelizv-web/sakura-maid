@@ -6,8 +6,11 @@
 </form>
 <?php if(empty($maids)): ?><div style="text-align:center;padding:3rem;color:var(--g400)"><div style="font-size:3rem;margin-bottom:.8rem">🔍</div><p>No hay Maids disponibles en este momento.</p></div>
 <?php else: ?><div class="maids-grid">
-<?php foreach($maids as $m): ?><div class="maid-card">
-<div class="m-avatar"><?=strtoupper(mb_substr($m['nombre'],0,1))?></div>
+<?php foreach($maids as $m):
+  $seed = urlencode($m['nombre'].$m['apellido']);
+  $avatar = "https://api.dicebear.com/7.x/lorelei/svg?seed={$seed}&backgroundColor=C97B84&radius=50";
+?><div class="maid-card">
+<img src="<?=$avatar?>" alt="<?=e($m['nombre'])?>" style="width:72px;height:72px;border-radius:50%;margin:0 auto .8rem;display:block;background:#f0ece8">
 <div class="m-name"><?=e($m['nombre'].' '.$m['apellido'])?></div>
 <div class="m-stars"><?php $c=round($m['calificacion_promedio']??0); for($i=1;$i<=5;$i++) echo $i<=$c?'★':'☆'; ?> (<?=number_format((float)$m['calificacion_promedio'],1)?>)</div>
 <div class="m-rate">RD$<?=number_format((float)$m['tarifa_hora'],0,'.','.')?>/hr</div>
