@@ -17,7 +17,6 @@
 </div>
 <?php endif; ?>
 
-<!-- PRÓXIMO TRABAJO -->
 <?php if(!empty($proximo_trabajo)): ?>
 <div class="card" style="background:linear-gradient(135deg,#f0ece8,#fff);border-left:4px solid #846C5B;margin-bottom:1.2rem">
   <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
@@ -35,7 +34,6 @@
 </div>
 <?php endif; ?>
 
-<!-- CALIFICACIÓN Y PERFIL -->
 <?php if($perfil): 
   $estrellas = round($perfil['calificacion_promedio']??0);
   $ini = strtoupper(substr($user['nombre'],0,1).substr($user['apellido'],0,1));
@@ -55,11 +53,9 @@
       <span style="color:var(--g400);margin-left:.5rem">RD$<?=number_format($perfil['tarifa_hora'],0,'.','.')?>/hr</span>
     </div>
   </div>
-  <a href="/maids/perfil" class="btn btn-outline btn-sm">Editar perfil</a>
 </div>
 <?php endif; ?>
 
-<!-- STATS -->
 <div class="stats-row">
   <div class="card">
     <div class="card-title">Trabajos totales</div>
@@ -80,13 +76,11 @@
   </div>
 </div>
 
-<!-- GRÁFICOS -->
 <div class="charts-row">
   <div class="chart-card"><div class="chart-title">Trabajos por mes</div><div class="chart-wrap"><canvas id="cBar"></canvas></div></div>
   <div class="chart-card"><div class="chart-title">Estado de trabajos</div><div class="chart-wrap"><canvas id="cDonut"></canvas></div></div>
 </div>
 
-<!-- RESEÑAS RECIENTES -->
 <?php if(!empty($resenas)): ?>
 <div class="card" style="margin-top:1.2rem">
   <div style="margin-bottom:1rem"><h2 style="font-size:1rem">Reseñas recientes</h2></div>
@@ -114,7 +108,6 @@
 </div>
 <?php endif; ?>
 
-<!-- TRABAJOS RECIENTES -->
 <div class="card" style="margin-top:1.2rem">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
     <h2 style="font-size:1rem">Trabajos recientes</h2>
