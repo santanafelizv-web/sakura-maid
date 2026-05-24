@@ -22,9 +22,9 @@ class MaidController {
     }
     public function guardarPerfil(): void {
         requireLogin(); requireRole('maid'); $user=authUser(); $db=getDB();
-        $desc=trim($_POST['descripcion']??''); $tarifa=(float)($_POST['tarifa_hora']??0);
+        $desc=trim($_POST['descripcion']??'');
         $disp=in_array($_POST['disponibilidad']??'',['disponible','ocupado','inactivo'])?$_POST['disponibilidad']:'disponible';
-        $db->prepare("UPDATE perfil_maid SET descripcion=?,tarifa_hora=?,disponibilidad=? WHERE usuario_id=?")->execute([$desc,$tarifa,$disp,$user['id']]);
+        $db->prepare("UPDATE perfil_maid SET descripcion=?,disponibilidad=? WHERE usuario_id=?")->execute([$desc,$disp,$user['id']]);
         $_SESSION['ok']='Perfil actualizado.'; redirect('/maids/perfil');
     }
 }

@@ -7,7 +7,6 @@
 <h2 style="font-size:1rem;margin-bottom:1.2rem">Editar información</h2>
 <form method="POST" action="/maids/perfil">
   <div class="form-group"><label>Descripción profesional</label><textarea name="descripcion" class="form-control" rows="4" placeholder="Cuéntale a los clientes sobre tu experiencia..."><?=e($perfil['descripcion']??'')?></textarea></div>
-  <div class="form-group"><label>Tarifa por hora (RD$)</label><input type="number" name="tarifa_hora" class="form-control" min="0" step="50" value="<?=e($perfil['tarifa_hora']??350)?>"></div>
   <div class="form-group"><label>Disponibilidad</label>
   <select name="disponibilidad" class="form-control">
     <?php foreach(['disponible'=>'Disponible ✓','ocupado'=>'Ocupado','inactivo'=>'Inactivo'] as $v=>$l): ?>
