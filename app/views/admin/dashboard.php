@@ -83,6 +83,33 @@
   </div>
 </div>
 
+<div class="chart-card" style="margin-top:1.5rem">
+  <div class="chart-title">🧹 Tarifas de Maids</div>
+  <?php
+  $db=getDB();
+  $allMailds=$db->query("SELECT pm.*,u.nombre,u.apellido FROM perfil_maid pm JOIN usuario u ON pm.usuario_id=u.id ORDER BY u.nombre")->fetchAll();
+  ?>
+  <div style="display:flex;flex-direction:column;gap:.8rem;padding:.5rem 0">
+  <?php foreach($allMailds as $m): ?>
+  <div style="display:flex;align-items:center;gap:1rem;padding:.8rem;background:var(--g100);border-radius:var(--r)">
+    <div style="width:42px;height:42px;border-radius:50%;background:#C97B84;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.9rem;flex-shrink:0">
+      <?=strtoupper(substr($m['nombre'],0,1).substr($m['apellido'],0,1))?>
+    </div>
+    <div style="flex:1">
+      <div style="font-weight:600;font-size:.9rem"><?=e($m['nombre'].' '.$m['apellido'])?></div>
+    </div>
+    <form method="POST" action="/admin/maids/tarifa" style="display:flex;align-items:center;gap:.5rem">
+      <input type="hidden" name="maid_id" value="<?=(int)$m['id']?>">
+      <span style="font-size:.9rem;color:var(--g400)">RD$</span>
+      <input type="number" name="tarifa_hora" value="<?=(float)$m['tarifa_hora']?>" min="0" step="50"
+        style="width:100px;padding:.4rem .6rem;border:1px solid var(--g200);border-radius:var(--r);font-size:.9rem">
+      <span style="font-size:.9rem;color:var(--g400)">/hr</span>
+      <button type="submit" class="btn btn-primary btn-auto" style="padding:.4rem 1rem">Guardar</button>
+    </form>
+  </div>
+  <?php endforeach; ?>
+  </div>
+</div>
 <script>
 fetch('/api/dashboard-data').then(r=>r.json()).then(d=>{
   new Chart(document.getElementById('cBar'),{type:'bar',data:{labels:d.labels,datasets:[{label:'Servicios',data:d.valores,backgroundColor:'rgba(201,123,132,0.7)',borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}});
