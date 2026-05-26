@@ -41,14 +41,18 @@ class ServicioController {
         $db->prepare("INSERT INTO servicio (cliente_id,maid_id,descripcion,fecha,hora_inicio,hora_fin,direccion,estado,precio_total) VALUES (?,?,?,?,?,?,?,'pendiente',?)")
            ->execute([$user['id'],$mid,$desc,$fecha,$hi,$hf,$dir,$precio]);
         $sid=(int)$db->lastInsertId();
-        // Notificación interna a la maid
-        $pm=$db->prepare("SELECT pm.usuario_id,u.nombre,u.apellido FROM perfil_maid pm JOIN usuario u ON pm.usuario_id=u.id WHERE pm.id=?");
+        $pm=$db->prepare("SELECT pm.usuario_id,u.nombre,u.apellido,u.email FROM perfil_maid pm JOIN usuario u ON pm.usuario_id=u.id WHERE pm.id=?");
         $pm->execute([$mid]); $maidUser=$pm->fetch();
         if ($maidUser) {
             $db->prepare("INSERT INTO notificacion (usuario_id,titulo,mensaje,tipo) VALUES (?,?,?,'servicio')")
                ->execute([$maidUser['usuario_id'],'Nuevo trabajo disponible',"{$user['nombre']} {$user['apellido']} solicitó tus servicios para el $fecha."]);
-            // Disparar n8n
-            triggerN8n('nuevo_servicio',['maid'=>$maidUser['nombre'].' '.$maidUser['apellido'],'cliente'=>$user['nombre'].' '.$user['apellido'],'fecha'=>$fecha,'precio'=>$precio]);
+            triggerN8n('nuevo_servicio',[
+                'maid'       => $maidUser['nombre'].' '.$maidUser['apellido'],
+                'maid_email' => $maidUser['email'],
+                'cliente'    => $user['nombre'].' '.$user['apellido'],
+                'fecha'      => $fecha,
+                'precio'     => $precio
+            ]);
         }
         $_SESSION['ok']='¡Servicio contratado! La Maid confirmará pronto.'; redirect('/servicios');
     }
@@ -60,13 +64,17 @@ class ServicioController {
         $db->prepare("UPDATE servicio SET estado=? WHERE id=?")->execute([$estado,$id]);
         if ($estado==='completado') {
             $db->prepare("CALL sp_generar_factura(?)")->execute([$id]);
-            // Notificar al cliente
             $sv=$db->prepare("SELECT s.*,u.email,u.nombre FROM servicio s JOIN usuario u ON s.cliente_id=u.id WHERE s.id=?");
             $sv->execute([$id]); $sv=$sv->fetch();
             if ($sv) {
                 $db->prepare("INSERT INTO notificacion (usuario_id,titulo,mensaje,tipo) VALUES (?,?,?,'pago')")
                    ->execute([$sv['cliente_id'],'Servicio completado','Tu servicio del '.$sv['fecha'].' fue completado. Revisa tu factura.']);
-                triggerN8n('servicio_completado',['cliente_email'=>$sv['email'],'cliente'=>$sv['nombre'],'fecha'=>$sv['fecha'],'total'=>$sv['precio_total']]);
+                triggerN8n('servicio_completado',[
+                    'cliente_email' => $sv['email'],
+                    'cliente'       => $sv['nombre'],
+                    'fecha'         => $sv['fecha'],
+                    'total'         => $sv['precio_total']
+                ]);
             }
         }
         $_SESSION['ok']='Estado actualizado.'; redirect('/servicios');
