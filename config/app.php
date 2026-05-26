@@ -8,7 +8,8 @@ if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
 $defaultHost = !empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost:8000';
 define('APP_URL', getenv('APP_URL') ?: $defaultScheme.'://'.$defaultHost);
 
-define('N8N_WEBHOOK', getenv('N8N_WEBHOOK_URL') ?: '');
+// N8N webhook URL (configura en Railway)
+define('N8N_WEBHOOK', getenv('N8N_WEBHOOK') ?: '');
 
 if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params(['lifetime'=>86400,'path'=>'/','httponly'=>true,'samesite'=>'Lax']);
@@ -16,19 +17,19 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 function redirect(string $path): void { header('Location: '.APP_URL.$path); exit; }
-function authUser(): ?array { return $_SESSION['user'] ?? null; }
-function e(string $s): string { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
+function authUser(): ?array           { return $_SESSION['user'] ?? null; }
+function e(string $s): string         { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
 
 function requireLogin(): void {
     if (!authUser()) redirect('/login');
 }
-
 function requireRole(string $rol): void {
     requireLogin();
     $u = authUser();
     if ($u['rol'] !== $rol && $u['rol'] !== 'admin') redirect('/dashboard');
 }
 
+// Dispara webhook a n8n
 function triggerN8n(string $evento, array $data): void {
     $url = N8N_WEBHOOK;
     if (empty($url)) return;
