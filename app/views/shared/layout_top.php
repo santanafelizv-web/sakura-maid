@@ -6,28 +6,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
 </head>
 <body>
-<?php $u=authUser(); $seed=urlencode($u['nombre'].$u['apellido']); $avatarUrl="https://api.dicebear.com/7.x/lorelei/svg?seed={$seed}&backgroundColor=C97B84&radius=50"; ?>
+<?php $u=authUser(); $avatarSeed=urlencode($u['avatar_seed']??$u['nombre'].$u['apellido']); $avatarUrl="https://api.dicebear.com/7.x/lorelei/svg?seed={$avatarSeed}&backgroundColor=C97B84&radius=50"; ?>
 <nav class="navbar">
   <div class="nav-inner">
-    <a href="/dashboard" class="nav-brand"><img src="/images/logoSakura.png" alt="Sakura" style="width:40px;height:40px;object-fit:cover;border-radius:50%;margin-right:.4rem"> <span>Sakura</span> Maid Services</a>
-    <div class="nav-links">
-      <?php if($u['rol']==='cliente'): ?>
-        <a href="/maids"    class="<?=($ap??'')==='maids'?'active':''?>">🔍 Buscar Maids</a>
-        <a href="/servicios" class="<?=($ap??'')==='servicios'?'active':''?>">📋 Servicios</a>
-        <a href="/facturas"  class="<?=($ap??'')==='facturas'?'active':''?>">🧾 Facturas</a>
-      <?php elseif($u['rol']==='maid'): ?>
-        <a href="/maids/perfil" class="<?=($ap??'')==='mperfil'?'active':''?>">✏️ Mi Perfil</a>
-        <a href="/servicios"    class="<?=($ap??'')==='servicios'?'active':''?>">📋 Trabajos</a>
-        <a href="/facturas"     class="<?=($ap??'')==='facturas'?'active':''?>">🧾 Facturas</a>
-      <?php else: ?>
-        <a href="/maids">👩 Maids</a>
-        <a href="/servicios">📋 Servicios</a>
-        <a href="/facturas">🧾 Facturas</a>
-        <a href="/reportes">📊 Reportes</a>
-      <?php endif; ?>
-      <a href="/perfil" class="<?=($ap??'')==='perfil'?'active':''?>">👤 <?=e($u['nombre'])?></a>
-      <a href="/logout" class="btn-exit">Salir</a>
-    </div>
+    <a href="/dashboard" class="nav-brand"><img src="/images/logoSakura.png" alt="Sakura" style="width:48px;height:48px;object-fit:cover;border-radius:50%;margin-right:.4rem"> <span>Sakura</span> Maid Services</a>
   </div>
 </nav>
 <div class="page-wrap">

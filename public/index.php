@@ -33,6 +33,7 @@ $routes = [
     ['GET',  '/reportes',              'ReporteController',   'index'],
     ['GET',  '/perfil',                'PerfilController',    'index'],
     ['POST', '/perfil',                'PerfilController',    'actualizar'],
+    ['POST', '/perfil/avatar',         'PerfilController',    'actualizarAvatar'],
     ['GET',  '/resenas',               'ResenaController',    'index'],
     ['GET',  '/resenas/crear',         'ResenaController',    'crear'],
     ['POST', '/resenas/crear',         'ResenaController',    'guardar'],

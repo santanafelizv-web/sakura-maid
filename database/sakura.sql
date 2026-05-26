@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS usuario (
   password_hash VARCHAR(255) NOT NULL,
   telefono      VARCHAR(20),
   rol           ENUM('cliente','maid','admin') NOT NULL DEFAULT 'cliente',
+  avatar_seed   VARCHAR(50) DEFAULT NULL,
   created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

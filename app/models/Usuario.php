@@ -8,7 +8,7 @@ class Usuario {
         $s->execute([$email]); return $s->fetch() ?: null;
     }
     public function findById(int $id): ?array {
-        $s = $this->db->prepare("SELECT id,nombre,apellido,email,telefono,rol FROM usuario WHERE id=? LIMIT 1");
+        $s = $this->db->prepare("SELECT id,nombre,apellido,email,telefono,rol,avatar_seed FROM usuario WHERE id=? LIMIT 1");
         $s->execute([$id]); return $s->fetch() ?: null;
     }
     public function create(array $d): int {
@@ -21,7 +21,13 @@ class Usuario {
         $s->execute([$email]); return (int)$s->fetchColumn() > 0;
     }
     public function update(int $id, array $d): void {
-        $this->db->prepare("UPDATE usuario SET nombre=?,apellido=?,telefono=? WHERE id=?")->execute([$d['nombre'],$d['apellido'],$d['telefono']??null,$id]);
+        $fields = []; $values = [];
+        foreach (['nombre','apellido','telefono','avatar_seed'] as $f) {
+            if (array_key_exists($f, $d)) { $fields[] = "$f=?"; $values[] = $d[$f]; }
+        }
+        if (empty($fields)) return;
+        $values[] = $id;
+        $this->db->prepare("UPDATE usuario SET ".implode(',',$fields)." WHERE id=?")->execute($values);
     }
     public function verify(string $pass, string $hash): bool { return password_verify($pass,$hash); }
 }

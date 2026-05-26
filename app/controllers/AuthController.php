@@ -5,9 +5,11 @@ class AuthController {
 
     public function loginForm(): void {
         if (authUser()) redirect('/dashboard');
-        $error   = $_SESSION['err'] ?? null; unset($_SESSION['err']);
-        $success = $_SESSION['ok']  ?? null; unset($_SESSION['ok']);
-        require __DIR__.'/../views/auth/login.php';
+        $error    = $_SESSION['err'] ?? null; unset($_SESSION['err']);
+        $success  = $_SESSION['ok']  ?? null; unset($_SESSION['ok']);
+        $old      = $_SESSION['old'] ?? [];   unset($_SESSION['old']);
+        $mode     = 'login';
+        require __DIR__.'/../views/auth/auth.php';
     }
 
     public function login(): void {
@@ -18,15 +20,17 @@ class AuthController {
         if (!$user || !$this->m->verify($pass, $user['password_hash'])) {
             $_SESSION['err']='Correo o contraseña incorrectos.'; redirect('/login');
         }
-        $_SESSION['user'] = ['id'=>$user['id'],'nombre'=>$user['nombre'],'apellido'=>$user['apellido'],'email'=>$user['email'],'rol'=>$user['rol']];
+        $_SESSION['user'] = ['id'=>$user['id'],'nombre'=>$user['nombre'],'apellido'=>$user['apellido'],'email'=>$user['email'],'rol'=>$user['rol'],'avatar_seed'=>$user['avatar_seed']??null];
         redirect('/dashboard');
     }
 
     public function registerForm(): void {
         if (authUser()) redirect('/dashboard');
-        $error = $_SESSION['err'] ?? null; unset($_SESSION['err']);
-        $old   = $_SESSION['old'] ?? [];   unset($_SESSION['old']);
-        require __DIR__.'/../views/auth/register.php';
+        $error   = $_SESSION['err'] ?? null; unset($_SESSION['err']);
+        $success = $_SESSION['ok']  ?? null; unset($_SESSION['ok']);
+        $old     = $_SESSION['old'] ?? [];   unset($_SESSION['old']);
+        $mode    = 'register';
+        require __DIR__.'/../views/auth/auth.php';
     }
 
     public function register(): void {

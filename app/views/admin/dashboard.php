@@ -83,13 +83,6 @@
   </div>
 </div>
 
-<div class="actions-bar" style="margin-top:1.5rem">
-  <a href="/maids" class="btn btn-primary btn-auto">🧹 Ver Maids</a>
-  <a href="/servicios" class="btn btn-outline btn-auto">📋 Servicios</a>
-  <a href="/reportes" class="btn btn-secondary btn-auto">📊 Reportes</a>
-  <a href="/facturas" class="btn btn-outline btn-auto">🧾 Facturas</a>
-</div>
-
 <script>
 fetch('/api/dashboard-data').then(r=>r.json()).then(d=>{
   new Chart(document.getElementById('cBar'),{type:'bar',data:{labels:d.labels,datasets:[{label:'Servicios',data:d.valores,backgroundColor:'rgba(201,123,132,0.7)',borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}});
