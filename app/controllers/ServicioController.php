@@ -79,4 +79,15 @@ class ServicioController {
         }
         $_SESSION['ok']='Estado actualizado.'; redirect('/servicios');
     }
+
+    public function eliminar(): void {
+        requireLogin(); $user=authUser(); $db=getDB();
+        $id=(int)($_POST['id']??0);
+        if ($user['rol']==='admin') {
+            $db->prepare("DELETE FROM servicio WHERE id=?")->execute([$id]);
+        } else {
+            $db->prepare("DELETE FROM servicio WHERE id=? AND cliente_id=? AND estado='cancelado'")->execute([$id,$user['id']]);
+        }
+        $_SESSION['ok']='Servicio eliminado.'; redirect('/servicios');
+    }
 }

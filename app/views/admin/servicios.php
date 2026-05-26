@@ -6,8 +6,12 @@
 <td><?=(int)$s['id']?></td><td><?=e($s['cn'].' '.$s['ca'])?></td><td><?=e($s['mn'].' '.$s['ma'])?></td>
 <td><?=e($s['fecha'])?></td><td><span class="badge b-<?=e($s['estado'])?>"><?=e($s['estado'])?></span></td>
 <td>RD$<?=number_format((float)$s['precio_total'],0,'.','.')?></td>
-<td><?php if($s['estado']==='en_progreso'||$s['estado']==='confirmado'): ?>
+<td style="display:flex;gap:.4rem;flex-wrap:wrap">
+<?php if($s['estado']==='en_progreso'||$s['estado']==='confirmado'): ?>
 <form method="POST" action="/servicios/estado" style="display:inline"><input type="hidden" name="id" value="<?=(int)$s['id']?>">
-<button name="estado" value="completado" class="btn btn-success btn-sm">Completar</button></form><?php else: ?>—<?php endif; ?></td>
+<button name="estado" value="completado" class="btn btn-success btn-sm">Completar</button></form>
+<?php endif; ?>
+<form method="POST" action="/servicios/eliminar" style="display:inline"><input type="hidden" name="id" value="<?=(int)$s['id']?>"><button class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar este servicio permanentemente?')">🗑️</button></form>
+</td>
 </tr><?php endforeach; ?></tbody></table></div></div>
 <?php require __DIR__.'/../shared/layout_bottom.php'; ?>
