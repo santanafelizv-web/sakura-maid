@@ -11,8 +11,14 @@
 <td><?=e(mb_strimwidth($s['direccion'],0,25,'…'))?></td>
 <td><span class="badge b-<?=e($s['estado'])?>"><?=e($s['estado'])?></span></td>
 <td>RD$<?=number_format((float)$s['precio_total'],0,'.','.')?></td>
-<td><?php if($s['estado']==='pendiente'): ?><form method="POST" action="/servicios/estado" style="display:inline"><input type="hidden" name="id" value="<?=(int)$s['id']?>"><button name="estado" value="cancelado" class="btn btn-danger btn-sm" onclick="return confirm('¿Cancelar?')">Cancelar</button></form>
+<td style="display:flex;gap:.4rem;flex-wrap:wrap">
+<?php if($s['estado']==='pendiente'): ?>
+<form method="POST" action="/servicios/estado" style="display:inline"><input type="hidden" name="id" value="<?=(int)$s['id']?>"><button name="estado" value="cancelado" class="btn btn-danger btn-sm" onclick="return confirm('¿Cancelar este servicio?')">Cancelar</button></form>
+<?php endif; ?>
+<?php if($s['estado']==='cancelado'): ?>
+<form method="POST" action="/servicios/eliminar" style="display:inline"><input type="hidden" name="id" value="<?=(int)$s['id']?>"><button class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar este servicio?')">🗑️ Eliminar</button></form>
 <?php elseif($s['estado']==='completado'): ?><a href="/facturas" class="btn btn-outline btn-sm">🧾 Factura</a>
-<?php else: ?><span style="color:var(--g400);font-size:.8rem">—</span><?php endif; ?></td>
+<?php elseif($s['estado']==='pendiente'): ?><?php else: ?><span style="color:var(--g400);font-size:.8rem">—</span><?php endif; ?>
+</td>
 </tr><?php endforeach; ?></tbody></table></div><?php endif; ?></div>
 <?php require __DIR__.'/../shared/layout_bottom.php'; ?>
