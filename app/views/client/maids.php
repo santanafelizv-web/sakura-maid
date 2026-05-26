@@ -16,10 +16,8 @@
 <div class="m-rate">RD$<?=number_format((float)$m['tarifa_hora'],0,'.','.')?>/hr</div>
 <div class="m-desc"><?=e(mb_strimwidth($m['descripcion']?:'Maid profesional disponible.',0,80,'…'))?></div>
 <span class="badge b-<?=e($m['disponibilidad'])?>" style="margin-bottom:.8rem"><?=e($m['disponibilidad'])?></span><br>
-<?php if(isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin'): ?>
-<a href="/maids/<?=(int)$m['id']?>" class="btn btn-sm" style="margin-top:.5rem;width:100%;background:#e8d5d5;color:#7a4a4a;border:none">👁️ Ver Perfil</a>
-<?php else: ?>
+<?php if(!isset($_SESSION['user']['rol']) || $_SESSION['user']['rol'] !== 'admin'): ?>
 <a href="/servicios/nuevo?maid_id=<?=(int)$m['id']?>" class="btn btn-primary btn-sm" style="margin-top:.5rem;width:100%">Contratar 🧹</a>
 <?php endif; ?>
 </div><?php endforeach; ?></div><?php endif; ?>
-<?php require __DIR__.'/../shared/layout_bottom.php'; ?>s
+<?php require __DIR__.'/../shared/layout_bottom.php'; ?>
