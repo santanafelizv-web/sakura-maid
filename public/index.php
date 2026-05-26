@@ -38,6 +38,8 @@ $routes = [
     ['POST', '/resenas/crear',         'ResenaController',    'guardar'],
     ['GET',  '/api/dashboard-data',    'ApiController',       'dashboardData'],
     ['GET',  '/api/reporte-data',      'ApiController',       'reporteData'],
+    ['GET',  '/admin/maids',           'MaidController',      'adminMailds'],
+    ['POST', '/admin/maids/tarifa',    'MaidController',      'editarTarifa'],
 ];
 
 foreach ($routes as [$rm, $ru, $ctrl, $action]) {
