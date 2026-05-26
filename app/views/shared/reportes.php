@@ -1,5 +1,19 @@
 <?php $pageTitle='Reportes'; $ap='reportes'; require __DIR__.'/layout_top.php'; ?>
-<div class="page-head"><h1>Reportes Empresariales 📊</h1><p>Análisis de datos del negocio</p></div>
+<div class="page-head" style="display:flex;justify-content:space-between;align-items:center">
+  <div>
+    <h1>Reportes Empresariales 📊</h1>
+    <p>Análisis de datos del negocio</p>
+  </div>
+  <button onclick="window.print()" class="btn btn-primary btn-auto" style="gap:.5rem">🖨️ Imprimir Reporte</button>
+</div>
+
+<style>
+@media print {
+  nav, .sidebar, .actions-bar, button, .btn { display:none !important; }
+  body { background:#fff !important; }
+  .card, .chart-card { box-shadow:none !important; border:1px solid #ddd !important; }
+}
+</style>
 
 <!-- Tarjetas de resumen (se llenan con JS) -->
 <div class="stats-row" id="resumen-cards">
@@ -33,14 +47,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
 fetch('/api/reporte-data').then(r=>r.json()).then(d=>{
-  // Resumen
   const res=d.resumen;
   document.getElementById('r-clientes').textContent    = res.clientes;
   document.getElementById('r-maids').textContent       = res.maids;
   document.getElementById('r-completados').textContent = res.completados;
   document.getElementById('r-ingresos').textContent    = 'RD$'+parseFloat(res.ingresos_total).toLocaleString('es-DO',{maximumFractionDigits:0});
 
-  // Gráfica ingresos por mes
   const meses = d.ingresos_mes.map(r=>r.nombre_mes);
   const totales = d.ingresos_mes.map(r=>parseFloat(r.ingresos_total||0));
   new Chart(document.getElementById('cIngresos'),{
@@ -49,7 +61,6 @@ fetch('/api/reporte-data').then(r=>r.json()).then(d=>{
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{x:{stacked:false},y:{beginAtZero:true,ticks:{callback:v=>'RD$'+v.toLocaleString()}}}}
   });
 
-  // Tabla ingresos
   const tbody=document.getElementById('tbody-ingresos');
   if(d.ingresos_mes.length===0){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--g400)">Sin datos de ingresos pagados aún.</td></tr>';}
   d.ingresos_mes.forEach(r=>{
@@ -58,7 +69,6 @@ fetch('/api/reporte-data').then(r=>r.json()).then(d=>{
     tbody.appendChild(tr);
   });
 
-  // Top maids
   const topDiv=document.getElementById('top-maids');
   if(d.top.length===0){topDiv.innerHTML='<p style="color:var(--g400);text-align:center;padding:1rem">Sin datos aún.</p>';return;}
   d.top.forEach((m,i)=>{
