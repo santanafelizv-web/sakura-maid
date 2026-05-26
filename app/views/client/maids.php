@@ -22,4 +22,4 @@
 <a href="/servicios/nuevo?maid_id=<?=(int)$m['id']?>" class="btn btn-primary btn-sm" style="margin-top:.5rem;width:100%">Contratar 🧹</a>
 <?php endif; ?>
 </div><?php endforeach; ?></div><?php endif; ?>
-<?php require __DIR__.'/../shared/layout_bottom.php'; ?>
+<?php require __DIR__.'/../shared/layout_bottom.php'; ?>s
