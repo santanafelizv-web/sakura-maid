@@ -9,7 +9,7 @@
 <?php $u=authUser(); $seed=urlencode($u['nombre'].$u['apellido']); $avatarUrl="https://api.dicebear.com/7.x/lorelei/svg?seed={$seed}&backgroundColor=C97B84&radius=50"; ?>
 <nav class="navbar">
   <div class="nav-inner">
-    <a href="/dashboard" class="nav-brand">🌸 <span>Sakura</span> Maid Services</a>
+    <a href="/dashboard" class="nav-brand"><img src="/images/logoSakura.png" alt="Sakura" style="width:40px;height:40px;object-fit:contain;margin-right:.4rem"> <span>Sakura</span> Maid Services</a>
     <div class="nav-links">
       <?php if($u['rol']==='cliente'): ?>
         <a href="/maids"    class="<?=($ap??'')==='maids'?'active':''?>">🔍 Buscar Maids</a>
