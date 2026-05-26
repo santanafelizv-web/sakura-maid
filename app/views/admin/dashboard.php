@@ -47,7 +47,7 @@
         $estrellas = round($m['calificacion_promedio']);
       ?>
       <div style="display:flex;align-items:center;gap:1rem;padding:.8rem;background:var(--g100);border-radius:var(--r)">
-        <div style="width:42px;height:42px;border-radius:50%;background:<?=$color?>;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.9rem;flex-shrink:0"><?=$iniciales?></div>
+        <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=<?=urlencode($m['nombre'].$m['apellido'])?>&backgroundColor=<?=ltrim($color,'#')?>&radius=50" alt="" style="width:42px;height:42px;border-radius:50%;flex-shrink:0;background:#f0ece8">
         <div style="flex:1">
           <div style="font-weight:600;font-size:.9rem"><?=e($m['nombre'].' '.$m['apellido'])?></div>
           <div style="font-size:.78rem;color:var(--g400)"><?=(int)$m['servicios']?> servicios · <?=str_repeat('⭐',$estrellas)?> <?=number_format($m['calificacion_promedio'],1)?></div>
@@ -65,11 +65,9 @@
       <p style="color:var(--g400);text-align:center;padding:2rem">Sin servicios aún</p>
     <?php else: ?>
     <div style="display:flex;flex-direction:column;gap:.6rem;padding:.5rem 0">
-      <?php foreach($servicios_recientes as $s):
-        $iniciales_c = strtoupper(substr($s['cn'],0,1).substr($s['ca'],0,1));
-      ?>
+      <?php foreach($servicios_recientes as $s): ?>
       <div style="display:flex;align-items:center;gap:.8rem;padding:.7rem;background:var(--g100);border-radius:var(--r)">
-        <div style="width:36px;height:36px;border-radius:50%;background:#C97B84;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.8rem;flex-shrink:0"><?=$iniciales_c?></div>
+        <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=<?=urlencode($s['cn'].$s['ca'])?>&backgroundColor=C97B84&radius=50" alt="" style="width:36px;height:36px;border-radius:50%;flex-shrink:0;background:#f0ece8">
         <div style="flex:1;min-width:0">
           <div style="font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><?=e($s['cn'].' '.$s['ca'])?> → <?=e($s['mn'].' '.$s['ma'])?></div>
           <div style="font-size:.75rem;color:var(--g400)"><?=e($s['fecha'])?> · RD$<?=number_format($s['precio_total'],0,'.','.')?></div>
@@ -80,34 +78,6 @@
     </div>
     <?php endif; ?>
     <a href="/servicios" style="display:block;text-align:center;margin-top:.8rem;font-size:.82rem;color:var(--rose)">Ver todos →</a>
-  </div>
-</div>
-
-<div class="chart-card" style="margin-top:1.5rem">
-  <div class="chart-title">🧹 Tarifas de Maids</div>
-  <?php
-  $db=getDB();
-  $allMailds=$db->query("SELECT pm.*,u.nombre,u.apellido FROM perfil_maid pm JOIN usuario u ON pm.usuario_id=u.id ORDER BY u.nombre")->fetchAll();
-  ?>
-  <div style="display:flex;flex-direction:column;gap:.8rem;padding:.5rem 0">
-  <?php foreach($allMailds as $m): ?>
-  <div style="display:flex;align-items:center;gap:1rem;padding:.8rem;background:var(--g100);border-radius:var(--r)">
-    <div style="width:42px;height:42px;border-radius:50%;background:#C97B84;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.9rem;flex-shrink:0">
-      <?=strtoupper(substr($m['nombre'],0,1).substr($m['apellido'],0,1))?>
-    </div>
-    <div style="flex:1">
-      <div style="font-weight:600;font-size:.9rem"><?=e($m['nombre'].' '.$m['apellido'])?></div>
-    </div>
-    <form method="POST" action="/admin/maids/tarifa" style="display:flex;align-items:center;gap:.5rem">
-      <input type="hidden" name="maid_id" value="<?=(int)$m['id']?>">
-      <span style="font-size:.9rem;color:var(--g400)">RD$</span>
-      <input type="number" name="tarifa_hora" value="<?=(float)$m['tarifa_hora']?>" min="0" step="50"
-        style="width:100px;padding:.4rem .6rem;border:1px solid var(--g200);border-radius:var(--r);font-size:.9rem">
-      <span style="font-size:.9rem;color:var(--g400)">/hr</span>
-      <button type="submit" class="btn btn-primary btn-auto" style="padding:.4rem 1rem">Guardar</button>
-    </form>
-  </div>
-  <?php endforeach; ?>
   </div>
 </div>
 <script>

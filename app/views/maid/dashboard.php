@@ -12,7 +12,7 @@
 <?php if(!empty($notificaciones)): ?>
 <div class="notif-list" style="margin-bottom:1.2rem">
   <?php foreach($notificaciones as $n): ?>
-  <div class="notif-item"><div class="notif-dot"></div><div><div class="notif-text"><?=e($n['titulo'])?>: <?=e($n['mensaje'])?></div><div class="notif-time"><?=e($n['created_at'])?></div></div></div>
+  <div class="notif-item"><button class="notif-close" onclick="this.parentElement.classList.add('dismissed')">&times;</button><div class="notif-dot"></div><div><div class="notif-text"><?=e($n['titulo'])?>: <?=e($n['mensaje'])?></div><div class="notif-time"><?=e($n['created_at'])?></div></div></div>
   <?php endforeach; ?>
 </div>
 <?php endif; ?>

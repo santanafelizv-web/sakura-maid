@@ -8,7 +8,7 @@
 <?php if(!empty($notificaciones)): ?>
 <div class="notif-list" style="margin-bottom:1.2rem">
   <?php foreach($notificaciones as $n): ?>
-  <div class="notif-item"><div class="notif-dot"></div><div><div class="notif-text"><?=e($n['titulo'])?>: <?=e($n['mensaje'])?></div><div class="notif-time"><?=e($n['created_at'])?></div></div></div>
+  <div class="notif-item"><button class="notif-close" onclick="this.parentElement.classList.add('dismissed')">&times;</button><div class="notif-dot"></div><div><div class="notif-text"><?=e($n['titulo'])?>: <?=e($n['mensaje'])?></div><div class="notif-time"><?=e($n['created_at'])?></div></div></div>
   <?php endforeach; ?>
 </div>
 <?php endif; ?>
@@ -50,11 +50,10 @@
 </div>
 
 <?php if(!empty($maid_favorita)): 
-  $ini = strtoupper(substr($maid_favorita['mn'],0,1).substr($maid_favorita['ma'],0,1));
   $estrellas = round($maid_favorita['calificacion_promedio']??0);
 ?>
 <div class="card" style="display:flex;align-items:center;gap:1.2rem;margin-bottom:1.2rem">
-  <div style="width:56px;height:56px;border-radius:50%;background:var(--rose);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.2rem;flex-shrink:0"><?=$ini?></div>
+  <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=<?=urlencode($maid_favorita['mn'].$maid_favorita['ma'])?>&backgroundColor=C97B84&radius=50" alt="" style="width:56px;height:56px;border-radius:50%;flex-shrink:0;background:#f0ece8">
   <div style="flex:1">
     <div style="font-size:.75rem;color:var(--g400);margin-bottom:.2rem">Tu maid favorita</div>
     <div style="font-weight:700;font-size:1rem"><?=e($maid_favorita['mn'].' '.$maid_favorita['ma'])?></div>
@@ -79,12 +78,10 @@
   <?php else: ?>
   <div style="display:flex;flex-direction:column;gap:.7rem">
     <?php foreach($recientes as $s): 
-      $ini_m = strtoupper(substr($s['mn'],0,1).substr($s['ma'],0,1));
       $ya_resena = false;
-      // verificar si ya tiene reseña
     ?>
     <div style="display:flex;align-items:center;gap:1rem;padding:.8rem;background:var(--g100);border-radius:var(--r)">
-      <div style="width:38px;height:38px;border-radius:50%;background:#C97B84;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.8rem;flex-shrink:0"><?=$ini_m?></div>
+      <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=<?=urlencode($s['mn'].$s['ma'])?>&backgroundColor=C97B84&radius=50" alt="" style="width:38px;height:38px;border-radius:50%;flex-shrink:0;background:#f0ece8">
       <div style="flex:1">
         <div style="font-weight:600;font-size:.88rem"><?=e($s['mn'].' '.$s['ma'])?></div>
         <div style="font-size:.78rem;color:var(--g400)"><?=e($s['fecha'])?> · RD$<?=number_format((float)$s['precio_total'],0,'.','.')?></div>

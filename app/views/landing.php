@@ -31,8 +31,6 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link text-white curtain-link" href="/login">Iniciar sesión</a></li>
-          <li class="nav-item"><a class="nav-link text-white curtain-link" href="/registro">Registrarse</a></li>
         </ul>
       </div>
     </div>

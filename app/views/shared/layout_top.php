@@ -6,7 +6,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
 </head>
 <body>
-<?php $u=authUser(); $avatarSeed=urlencode($u['avatar_seed']??$u['nombre'].$u['apellido']); $avatarUrl="https://api.dicebear.com/7.x/lorelei/svg?seed={$avatarSeed}&backgroundColor=C97B84&radius=50"; ?>
+<?php $u=authUser(); $seed=urlencode($u['nombre'].$u['apellido']); $avatarUrl="https://api.dicebear.com/7.x/lorelei/svg?seed={$seed}&backgroundColor=C97B84&radius=50"; ?>
 <nav class="navbar">
   <div class="nav-inner">
     <a href="/dashboard" class="nav-brand"><img src="/images/logoSakura.png" alt="Sakura" style="width:48px;height:48px;object-fit:cover;border-radius:50%;margin-right:.4rem"> <span>Sakura</span> Maid Services</a>

@@ -20,7 +20,7 @@ class AuthController {
         if (!$user || !$this->m->verify($pass, $user['password_hash'])) {
             $_SESSION['err']='Correo o contraseña incorrectos.'; redirect('/login');
         }
-        $_SESSION['user'] = ['id'=>$user['id'],'nombre'=>$user['nombre'],'apellido'=>$user['apellido'],'email'=>$user['email'],'rol'=>$user['rol'],'avatar_seed'=>$user['avatar_seed']??null];
+        $_SESSION['user'] = ['id'=>$user['id'],'nombre'=>$user['nombre'],'apellido'=>$user['apellido'],'email'=>$user['email'],'rol'=>$user['rol']];
         redirect('/dashboard');
     }
 
